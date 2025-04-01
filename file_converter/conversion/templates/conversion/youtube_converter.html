@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Converter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-white flex justify-center items-center min-h-screen">
+
+  <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-lg text-center">
+    <h1 class="text-3xl font-bold text-blue-400 mb-4">YouTube to MP3 Converter</h1>
+
+    <form method="POST" action="{% url 'youtube_converter' %}" class="space-y-4">
+      {% csrf_token %}
+      <label for="video_url" class="block text-lg">YouTube Video URL:</label>
+
+      <input type="url" name="video_url" id="video_url" required
+        class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-400 focus:outline-none">
+
+      <!-- Mensaje de error, oculto por defecto -->
+      <p id="invalidMessage" class="hidden text-red-400 text-sm mt-2">Ingresa un enlace de YouTube válido</p>
+
+      <!-- Contenedor para el título y la miniatura -->
+      <div id="previewContainer" class="hidden mt-4 space-y-2">
+        <!-- Título del video -->
+        <h2 id="videoTitle" class="text-xl font-semibold"></h2>
+        <!-- Vista previa de la miniatura -->
+        <img id="thumbnailImage" src="" alt="Video Thumbnail" class="mx-auto rounded-lg shadow-lg">
+      </div>
+
+      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg w-full">
+        Convert
+      </button>
+    </form>
+
+  </div>
+  </div>
+
+  <script>
+    const videoUrlInput = document.getElementById('video_url');
+    const previewContainer = document.getElementById('previewContainer');
+    const thumbnailImage = document.getElementById('thumbnailImage');
+    const videoTitleElem = document.getElementById('videoTitle');
+    const invalidMessage = document.getElementById('invalidMessage');
+
+    videoUrlInput.addEventListener('input', function () {
+      const url = videoUrlInput.value.trim();
+      const videoIdMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+
+      if (videoIdMatch && videoIdMatch[1]) {
+        const videoId = videoIdMatch[1];
+        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+        thumbnailImage.src = thumbnailUrl;
+
+        // Utiliza el endpoint oEmbed de YouTube para obtener el título
+        fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('No se pudo obtener información del video');
+            }
+            return response.json();
+          })
+          .then(data => {
+            videoTitleElem.textContent = data.title;
+            previewContainer.classList.remove('hidden');
+            invalidMessage.classList.add('hidden');
+          })
+          .catch(error => {
+            console.error(error);
+            previewContainer.classList.add('hidden');
+            invalidMessage.classList.remove('hidden');
+            invalidMessage.textContent = 'No se pudo obtener información del video. Ingresa un enlace de YouTube válido';
+          });
+      } else {
+        previewContainer.classList.add('hidden');
+        invalidMessage.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

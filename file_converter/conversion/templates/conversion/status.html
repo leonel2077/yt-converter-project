@@ -1,0 +1,107 @@
+{% load size_filters %} {% load time_filters %} {% load youtube_thumbnail %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Estado de Conversión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-gray-900 text-white flex justify-center items-center min-h-screen"
+  >
+    <!-- Contenedor principal -->
+    <div
+      class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-3xl text-center"
+    >
+      <h1 class="text-3xl font-bold text-blue-400 mb-6">
+        Estado de Conversión
+      </h1>
+
+      <!-- Sección Thumbnail -->
+      <div class="flex flex-col items-center md:justify-center gap-8">
+        <div>
+          {% if file_download.video_url %}
+          <img
+            src="https://img.youtube.com/vi/{{ file_download.video_url|youtube_id }}/hqdefault.jpg"
+            alt="Thumbnail"
+            class="w-64 h-auto rounded-lg shadow-md"
+          />
+          {% else %}
+          <div
+            class="w-64 h-48 bg-gray-700 rounded-lg flex items-center justify-center"
+          >
+            No Thumbnail
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Datos del video -->
+        <div class="space-y-2">
+          <p><strong>Título:</strong> {{ file_download.title }}</p>
+          <p>
+            <strong>Duración:</strong> {{ file_download.duration|secs_to_mins }}
+          </p>
+          <p>
+            <strong>Tamaño:</strong> {{ file_download.file_size|bytes_to_mb }}
+          </p>
+          <p>
+            <strong>Status:</strong>
+            <span
+              class="{% if file_download.status == 'completed' %}text-green-400{% else %}text-red-400{% endif %}"
+            >
+              {{ file_download.get_status_display }}
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Sección de botones -->
+      <div class="flex flex-row items-center justify-center gap-6 mt-6">
+        <a
+          href="{% url 'youtube_converter' %}"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
+        >
+          &#8592; Convert another file
+        </a>
+
+        {% if file_download.status == "completed" %}
+        <a
+          id="downloadBtn"
+          href="{% url 'download_file' file_download.id %}"
+          target="download_iframe"
+          class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg"
+        >
+          Download MP3
+        </a>
+        {% elif file_download.status == "failed" %}
+        <p class="mt-4 text-red-500">
+          Error: {{ file_download.error_message }}
+        </p>
+        {% endif %}
+      </div>
+
+      <!-- Mensaje de confirmación de descarga -->
+      <div id="downloadMessage" class="mt-4 hidden p-2 bg-green-700 rounded">
+        Your file has been downloaded successfully.
+      </div>
+    </div>
+
+    <!-- Iframe oculto para la descarga -->
+    <iframe name="download_iframe" style="display: none"></iframe>
+
+    <script>
+      // Muestra el mensaje de confirmación al hacer clic en el botón de descarga
+      document
+        .getElementById("downloadBtn")
+        ?.addEventListener("click", function () {
+          const downloadMessage = document.getElementById("downloadMessage");
+          downloadMessage.classList.remove("hidden");
+          setTimeout(() => {
+            downloadMessage.classList.add("hidden");
+          }, 5000);
+        });
+    </script>
+  </body>
+</html>

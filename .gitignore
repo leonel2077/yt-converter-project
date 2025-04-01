@@ -1,0 +1,120 @@
+# Archivos de registro
+*.log
+
+# Archivos de traducción compilados
+*.mo
+*.pot
+
+# Archivos bytecode de Python
+*.pyc
+__pycache__/
+
+# Base de datos SQLite (si la estás utilizando)
+db.sqlite3
+db.sqlite3-journal
+
+# Entorno virtual
+venv/
+.env
+.Python
+
+# Archivos de configuración locales
+local_settings.py
+
+# Archivos de caché y otros generados por el sistema
+*.bak
+*.swp
+*~
+
+# Archivos y directorios de herramientas específicas
+.idea/  # Para PyCharm
+.vscode/  # Para Visual Studio Code
+
+# Archivos de distribución/paquetes
+build/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Archivos de pruebas y cobertura
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Archivos de documentación generados
+docs/_build/
+
+# Archivos de Sphinx
+docs/_build/
+
+# Archivos de Jupyter Notebook
+.ipynb_checkpoints/
+
+# Archivos de IPython
+profile_default/
+ipython_config.py
+
+# Archivos de compilación de C
+*.o
+*.so
+
+# Archivos de PyInstaller
+*.manifest
+*.spec
+
+# Archivos de instalación
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Archivos de traducción
+*.mo
+*.pot
+
+# Archivos de caché de Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Archivos de instancia de Flask
+instance/
+.webassets-cache
+
+# Archivos de Scrapy
+.scrapy
+
+# Archivos de Sphinx
+docs/_build/
+
+# Archivos de PyBuilder
+.pybuilder/
+target/
+
+# Archivos de Jupyter Notebook
+.ipynb_checkpoints/
+
+# Archivos de IPython
+profile_default/
+ipython_config.py
+
+# Archivos de pyenv
+.python-version
+
+# Archivos de pipenv
+Pipfile.lock
+
+# Archivos de poetry
+poetry.lock
+
+# Archivos de pdm
+pdm.lock
